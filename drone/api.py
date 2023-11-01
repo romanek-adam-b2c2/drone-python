@@ -1,5 +1,5 @@
-
 from .drone import Drone
+from .http import create_session
 from .users import Drone as Users
 
 
@@ -7,6 +7,7 @@ class Client:
     def __init__(self, user, repo):
         self.owner = user
         self.repository = repo
+        self._session = create_session()
 
     @property
     def user(self):
@@ -22,15 +23,15 @@ class Client:
 
     @property
     def build(self):
-        return Drone.Build(self.owner, self.repository)
+        return Drone.Build(self.owner, self.repository, session=self._session)
 
     @property
     def cron(self):
-        return Drone.Cron(self.owner, self.repository)
+        return Drone.Cron(self.owner, self.repository, session=self._session)
 
     @property
     def repos(self):
-        return Drone.Repo(self.owner, self.repository)
+        return Drone.Repo(self.owner, self.repository, session=self._session)
 
 
 def drone(user, repo):
